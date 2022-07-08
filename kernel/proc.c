@@ -150,6 +150,8 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+  // 防止产生记忆现象，重置一下
+  p->trace_mask = 0;
 }
 
 // Create a user page table for a given process,
@@ -288,6 +290,9 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
+
+  //将trace_mask拷贝到子进程
+  np->trace_mask = p->trace_mask;
 
   safestrcpy(np->name, p->name, sizeof(p->name));
 

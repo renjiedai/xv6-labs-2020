@@ -95,3 +95,16 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// 添加sys_trace函数
+uint64
+sys_trace(void)
+{
+  int mask;
+  // argint检索第n个系统调用函数
+  if(argint(0,&mask) < 0)
+    return -1;
+  struct proc *p = myproc();
+  p->trace_mask = mask;
+  return 0;
+}
