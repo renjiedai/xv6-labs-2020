@@ -698,3 +698,14 @@ procdump(void)
     printf("\n");
   }
 }
+
+// 获取进程数，和获取内存类似，传入info.nproc的引用，然后链表动一次就加一次
+void
+procnum(uint64 *dest) {
+  *dest = 0;
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++) {
+    if(p->state != UNUSED) 
+      (*dest)++;
+  }
+}
