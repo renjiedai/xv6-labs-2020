@@ -158,6 +158,13 @@ void            uartputc_sync(int);
 int             uartgetc(void);
 
 // vm.c
+pte_t           *walk(pagetable_t pagetable, uint64 va, int alloc);
+// 声明辅助函数
+void            uvmmap(pagetable_t pagetable, uint64 va, uint64 pa, uint64 sz, int perm);
+// 用于内核页表的初始化
+pagetable_t     proc_kpt_init(void);
+// 将进程的内核页表保存到SATP寄存器
+void            proc_inithart(pagetable_t); 
 void            kvminit(void);
 void            kvminithart(void);
 uint64          kvmpa(uint64);
