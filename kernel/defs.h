@@ -157,7 +157,12 @@ void            uartputc(int);
 void            uartputc_sync(int);
 int             uartgetc(void);
 
+// vmcopyin.c
+int             copyin_new(pagetable_t, char *, uint64, uint64);
+int             copyinstr_new(pagetable_t, char *, uint64, uint64);
+
 // vm.c
+void            u2kvmcopy(pagetable_t pagetable, pagetable_t kernelpt, uint64 oldsz, uint64 newsz);
 pte_t           *walk(pagetable_t pagetable, uint64 va, int alloc);
 // 声明辅助函数
 void            uvmmap(pagetable_t pagetable, uint64 va, uint64 pa, uint64 sz, int perm);

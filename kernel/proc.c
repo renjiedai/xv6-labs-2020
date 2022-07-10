@@ -295,6 +295,9 @@ userinit(void)
 
   p->state = RUNNABLE;
 
+  // 将进程页表复制到进程的内核页表
+  u2kvmcopy(p->pagetable,p->kernelpt,0,p->sz);
+
   release(&p->lock);
 }
 
@@ -308,9 +311,15 @@ growproc(int n)
 
   sz = p->sz;
   if(n > 0){
+    // 加上PLIC限制,检查是否超过PLIC
+    if (PGROUNDUP(sz + n) >= PLIC){
+      return -1;
+    }
     if((sz = uvmalloc(p->pagetable, sz, sz + n)) == 0) {
       return -1;
     }
+    // 将进程页表复制到进程的内核页表
+    u2kvmcopy(p->pagetable, p->kernelpt, sz - n, sz);
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
   }
@@ -359,6 +368,9 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+
+  // 将进程页表复制到新进程的内核页表
+  u2kvmcopy(np->pagetable, np->kernelpt, 0, np->sz);
 
   release(&np->lock);
 
