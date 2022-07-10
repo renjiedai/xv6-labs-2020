@@ -70,6 +70,8 @@ sys_sleep(void)
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  //添加backtrace的调用
+  backtrace();
   return 0;
 }
 
