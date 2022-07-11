@@ -65,6 +65,22 @@ usertrap(void)
     intr_on();
 
     syscall();
+  } else if(r_scause() == 13 || r_scause() == 15){
+    char *mem = kalloc();
+    // 分配物理页失败
+    if (mem == 0)
+    {
+      panic("usertrap: kalloc");
+      p->killed = 1;
+    }
+    memset(mem, 0, PGSIZE);
+    // 进行页表映射以及失败的情况
+    if (mappages(p->pagetable, PGROUNDDOWN(r_stval()), PGSIZE, (uint64)mem, PTE_W | PTE_X | PTE_R | PTE_U) != 0)
+    {
+      kfree(mem);
+      panic("usertrap:mappages");
+      p->killed = 1;
+    }
   } else if((which_dev = devintr()) != 0){
     // ok
   } else {
