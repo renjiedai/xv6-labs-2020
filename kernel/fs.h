@@ -8,6 +8,8 @@
 #define NDOUBLYINDIRECT (NINDIRECT * NINDIRECT)
 // 文件最大大小的宏定义
 #define MAXFILE (NDIRECT + NINDIRECT + NDOUBLYINDIRECT)
+// 最大的符号链接深度
+#define NSYMLINK 10
 
 // Disk layout:
 // [ boot block | super block | log | inode blocks |
